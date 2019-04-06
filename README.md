@@ -1,6 +1,7 @@
 # springboot-shiro
-==========
-一：maven加入jar包
+
+# 一：maven加入jar包
+
 ```Java
         <!--添加shiro-->
         <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring -->
@@ -29,8 +30,8 @@
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>2.0.0</version>
         </dependency>
-===============
-二：自定义Realm
+```
+# 二：自定义Realm
 ```Java
 package com.shiro.springbootshiro.shiro;
 
@@ -104,8 +105,9 @@ public class UserRealm extends AuthorizingRealm {
         return authenticationInfo;
     }
 }
-=========
-三：写ShiroConfig
+```
+
+# 三：写ShiroConfig
 ```Java
 package com.shiro.springbootshiro.config;
 
@@ -249,9 +251,9 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 }
+```
 
-============
-四：shiro中使用thymelea标签。添加页面，设置没有权限的数据不显示出来
+# 四：shiro中使用thymelea标签。添加页面，设置没有权限的数据不显示出来
 ```Java
 <!--thymelea标签添加页面   inclide=”文件路径::局部代码片段名称”-->
 <div th:include="common/top :: top"></div>
@@ -263,5 +265,5 @@ public class ShiroConfig {
                         <button type="button" shiro:hasPermission="/roles/delete" onclick="delById();" class="btn btn-info" style="float: right; margin-right: 1px;">删除</button>
                         <button type="button" shiro:hasPermission="/roles/saveRoleResources" onclick="allotResources();" class="btn btn-info" style="float: right; margin-right: 1px;">分配权限</button>
                     </form>
-
+```
     
