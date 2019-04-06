@@ -2,6 +2,7 @@ package com.shiro.springbootshiro.service.impl;
 
 import com.shiro.springbootshiro.bean.UserRole;
 import com.shiro.springbootshiro.service.UserRoleService;
+import com.shiro.springbootshiro.shiro.UserRealm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,13 +12,11 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by yangqj on 2017/4/26.
- */
+
 @Service("userRoleService")
 public class UserRoleServiceImpl extends BaseService<UserRole> implements UserRoleService {
-    /*@Autowired
-    private MyShiroRealm myShiroRealm;*/
+    @Autowired
+    private UserRealm userRealm;
 
     @Override
     @Transactional(propagation= Propagation.REQUIRED,readOnly=false,rollbackFor={Exception.class})
@@ -38,6 +37,6 @@ public class UserRoleServiceImpl extends BaseService<UserRole> implements UserRo
         //更新当前登录的用户的权限缓存
         List<Integer> userid = new ArrayList<Integer>();
         userid.add(userRole.getUserid());
-        //myShiroRealm.clearUserAuthByUserId(userid);
+        userRealm.clearUserAuthByUserId(userid);
     }
 }
