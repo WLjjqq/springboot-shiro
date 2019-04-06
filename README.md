@@ -140,6 +140,7 @@ INSERT INTO `user_role` VALUES ('23', '2');
 INSERT INTO `user_role` VALUES ('1', '1');
 INSERT INTO `user_role` VALUES ('2', '2');
 ```
+![数据库关系图](https://github.com/WLyiyi/springboot-shiro/blob/master/src/main/resources/static/images/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%85%B3%E7%B3%BB.jpg)
 # 一：maven加入jar包
 
 ```Java
