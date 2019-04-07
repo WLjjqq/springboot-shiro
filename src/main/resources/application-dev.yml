@@ -11,7 +11,7 @@ spring:
   redis:
     host: localhost
     port: 6379
-    
+
 
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
@@ -24,3 +24,11 @@ logging:
       shiro:
         springbootshiro:
           mapper : debug
+
+shiro:
+  redis:
+    sessionLive: 30
+    sessionPrefix: "shiro_redis_session:"
+    cacheLive: 30
+    cachePrefix: "shiro_redis_cache:"
+    kickoutPrefix: "shiro_redis_kickout:"
