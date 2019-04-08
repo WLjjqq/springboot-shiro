@@ -4,10 +4,8 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.github.pagehelper.util.StringUtil;
 import com.shiro.springbootshiro.bean.Resources;
 import com.shiro.springbootshiro.service.ResourcesService;
-import com.shiro.springbootshiro.shiro.MySessionManager;
-import com.shiro.springbootshiro.shiro.RedisCacheManager;
-import com.shiro.springbootshiro.shiro.RedisSessionDAO;
-import com.shiro.springbootshiro.shiro.UserRealm;
+import com.shiro.springbootshiro.shiro.*;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
@@ -21,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,9 +56,15 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager  securityManager){
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager  securityManager,
+                                              @Qualifier("kickoutSessionControlFilter") KickoutSessionControlFilter kickoutSessionControlFilter){
         System.out.println("ShiroConfiguration.shirFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
+
+        //定义拦截器，限制同一个账号的登录人数。
+        Map<String, Filter> filters = new HashedMap(1);
+        filters.put("kickout", kickoutSessionControlFilter);
+        shiroFilterFactoryBean.setFilters(filters);
 
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
@@ -90,8 +94,7 @@ public class ShiroConfig {
                 filterChainDefinitionMap.put(resources.getResurl(),permission);
             }
         }
-        filterChainDefinitionMap.put("/**", "authc");
-
+        filterChainDefinitionMap.put("/**", "kickout,authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
@@ -279,5 +282,22 @@ public class ShiroConfig {
         sessionManager.setSessionDAO(redisSessionDAO());
         return sessionManager;
     }*/
+
+    /**
+     * shiroConfig中配置该Bean KickoutSessionControlFilter 控制登录人数
+     * @param sessionManager
+     * @param redisTemplate
+     * @return
+     */
+    @Bean(name = "kickoutSessionControlFilter")
+    public KickoutSessionControlFilter jwtFilter(SessionManager sessionManager, RedisTemplate redisTemplate) {
+        KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
+        kickoutSessionControlFilter.setSessionManager(sessionManager);
+        kickoutSessionControlFilter.setRedisTemplate(redisTemplate);
+        kickoutSessionControlFilter.setKickoutPrefix(kickoutPrefix);
+        kickoutSessionControlFilter.setKickoutUrl("/login?kickout=1");
+        kickoutSessionControlFilter.setMaxSession(1);
+        return kickoutSessionControlFilter;
+    }
 }
 

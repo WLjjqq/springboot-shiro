@@ -9,8 +9,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -60,8 +59,18 @@ public class HomeController {
         return "resources/resources";
     }
 
-    @RequestMapping("/403")
+    /**
+     * @GetMapping是一个组合注解 是@RequestMapping(method = RequestMethod.GET)的缩写
+     *  @PostMapping是一个组合注解 是@RequestMapping(method = RequestMethod.POST)的缩写
+     * @return
+     */
+    @GetMapping("/403")
     public String forbidden(){
         return "403";
+    }
+
+    @GetMapping(value = "login?kickout=1")
+    public String kickOut(){
+        return "login";
     }
 }
