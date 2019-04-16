@@ -2,9 +2,7 @@ package com.shiro.springbootshiro.shiro;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -14,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 自定义sessionDAO
- * Created by Administrator on 2018/10/7.
+ * 用于代替SessionManager执行Session相关的增删改查。这个接口允许我们将任意种类的数据存储方式引入到Session管理的基础框架中。
  */
 public class RedisSessionDAO extends AbstractSessionDAO {
     private long sessionLive;

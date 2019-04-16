@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 自定义redisCache
- * Created by Administrator on 2018/2/12.
  */
 public class ShiroRedisCache<K, V> implements Cache<K, V> {
     private long cacheLive;

@@ -15,9 +15,6 @@ import tk.mybatis.mapper.util.StringUtil;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * Created by yangqj on 2017/4/21.
- */
 @Service("userService")
 public class UserServiceImpl extends BaseService<User> implements UserService {
     @Resource

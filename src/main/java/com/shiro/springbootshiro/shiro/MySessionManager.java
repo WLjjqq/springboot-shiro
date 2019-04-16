@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 /**
  * 作用：自定义MySessionManager重写DefaultWebSessionManager类
+ *  SessionManager知道如何创建会话、管理用户回话的声明周期以便在所有运行环境下都可以给用户提供一个健壮的回话管理体验
  */
 public class MySessionManager extends DefaultWebSessionManager {
     //前端请求头传这个

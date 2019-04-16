@@ -23,6 +23,7 @@ import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Shiro的配置类
@@ -79,6 +80,8 @@ public class ShiroConfig {
 
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
+
+        //配置不登录可以访问的资源，anon 表示资源都可以匿名访问
         filterChainDefinitionMap.put("/css/**","anon");
         filterChainDefinitionMap.put("/js/**","anon");
         filterChainDefinitionMap.put("/img/**","anon");
@@ -94,6 +97,7 @@ public class ShiroConfig {
                 filterChainDefinitionMap.put(resources.getResurl(),permission);
             }
         }
+        //其他资源都需要认证  kickout,authc 表示需要认证才能进行访问
         filterChainDefinitionMap.put("/**", "kickout,authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -174,6 +178,18 @@ public class ShiroConfig {
     }
 
     /**
+     * 配置超过密码错误次数就锁定
+     * @return
+     */
+    @Bean("credentialsMatcher")
+    public RetryLimitHashedCredentialsMatcher retryLimitHashedCredentialsMatcher(){
+        RetryLimitHashedCredentialsMatcher retryLimitHashedCredentialsMatcher = new RetryLimitHashedCredentialsMatcher();
+        retryLimitHashedCredentialsMatcher.setHashAlgorithmName("MD5");//散列算法:这里使用MD5算法;
+        retryLimitHashedCredentialsMatcher.setHashIterations(2);  //配置加密的次数
+        return retryLimitHashedCredentialsMatcher;
+    }
+
+    /**
      * 用于身份信息权限信息的验证。开发时集成AuthorizingRealm，重写两个方法:
      * doGetAuthenticationInfo(获取即将需要认真的信息)、
      * doGetAuthorizationInfo(获取通过认证后的权限信息)。
@@ -184,7 +200,7 @@ public class ShiroConfig {
 
         UserRealm userRealm = new UserRealm();
         //告诉realm,使用credentialsMatcher加密算法类来验证密文
-        userRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        userRealm.setCredentialsMatcher(retryLimitHashedCredentialsMatcher());
         return userRealm;
     }
 
@@ -209,9 +225,9 @@ public class ShiroConfig {
 
         hashedCredentialsMatcher.setHashAlgorithmName("md5");//散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数，比如散列两次，相当于 md5(md5(""));
-
         return hashedCredentialsMatcher;
     }
+
 
 
     /**
@@ -299,5 +315,7 @@ public class ShiroConfig {
         kickoutSessionControlFilter.setMaxSession(1);
         return kickoutSessionControlFilter;
     }
+
+
 }
 

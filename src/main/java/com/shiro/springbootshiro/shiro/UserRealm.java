@@ -22,6 +22,7 @@ import java.util.*;
 
 /**
  * 作用：自定义Realm
+ * Realm是连接Shiro和你的安全数据的桥梁。任何时候当Shiro需要执行登录或者访问控制的时候，都需要调用已经配置的Realm的接口去获取数据。
  */
 public class UserRealm extends AuthorizingRealm {
 

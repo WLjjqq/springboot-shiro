@@ -10,4 +10,17 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="enable" jdbcType="INTEGER" property="enable" />
   </resultMap>
+
+  <select id="findByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from user where username=#{username}
+  </select>
+
+  <select id="findUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from user where user.id=#{id}
+  </select>
+  <update id="update" parameterType="com.shiro.springbootshiro.bean.User" >
+    update user set
+    enable = #{enable}
+    where id=#{id}
+  </update>
 </mapper>

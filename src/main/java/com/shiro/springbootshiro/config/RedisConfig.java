@@ -18,7 +18,7 @@ import org.springframework.data.redis.serializer.*;
 @EnableCaching  //开启注解
 public class RedisConfig {
 
-    @Bean
+    @Bean(name = "cacheManager" )
     public  RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisSerializer<String> redisSerializer = new StringRedisSerializer();
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -41,8 +41,7 @@ public class RedisConfig {
         return redisCacheManager;
     }
 
-    // 以下两种redisTemplate自由根据场景选择
-    @Bean
+    @Bean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -61,12 +60,18 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
-    @Bean
+    @Bean(name = "stringRedisTemplate")
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(factory);
         return stringRedisTemplate;
     }
+
+    /**
+     * session的缓存。使用JDK的序列化，序列化成字节码。如果转换成JSON的序列化的话，反序列化会出错。
+     * @param redisConnectionFactory
+     * @return
+     */
     @Bean(name = "redisTemplateSession")
     RedisTemplate<String, Object> redisTemplateSession(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate redisTemplate = new StringRedisTemplate(redisConnectionFactory);

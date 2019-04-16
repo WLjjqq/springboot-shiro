@@ -1,7 +1,6 @@
 package com.shiro.springbootshiro.shiro;
 
 import com.shiro.springbootshiro.bean.User;
-import com.shiro.springbootshiro.util.CodeAndMsgEnum;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -9,11 +8,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
